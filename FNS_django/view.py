@@ -3,6 +3,7 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer 
 import json
 from django.http import JsonResponse
+# if u Want to use change the link to the model cuz i ended up adding it later alone 
 model_path = 'C:/Users/hp/Desktop/FNS/model_and_vectorizer.pkl'
 def home(request):
     return render(request,'page.html')
