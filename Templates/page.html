@@ -1,0 +1,64 @@
+<html style="margin-top: 50px;">
+    <h1 style="text-align: center;">
+        Fake news detetction 
+    </h1>
+    <form method="POST" id="text-form" style="text-align: center; margin : 50px">
+        {% csrf_token %}
+        <textarea type="text" name="text" id="text" style="width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;resize: vertical;"></textarea>
+        <button id="print" style="width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;">
+
+            predict 
+        </button>
+    </form>
+
+    <script>
+        const text = document.getElementById("text")
+        const print = document.getElementById("print")
+        print.addEventListener("click", function(event){
+            event.preventDefault();
+            const textInput = text.value.trim()
+            //console.log(input)
+        
+        if(textInput === ''){
+            alert('Field is empty, try again !')
+        }else{  
+
+            //send data to view.py so it can be treated later on by the model
+            fetch('/model/',{
+                method : 'POST',
+                headers : {
+                    'content-Type' : 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body : JSON.stringify({text: textInput}),
+
+            })
+            .then(response => response.json())
+            .then(data =>{
+                console.log(data);
+               
+                    // Update the page with the result
+                    document.getElementById("prediction-result").innerHTML = 
+                        `Prediction: ${data.prediction} <br> Probability: ${data.probability}`;
+                
+            })
+            .catch(error => console.error('Error : ',error));
+        }
+    })
+    </script>
+    <div id="prediction-result" style="text-align: center;">
+    </div>
+</html>
